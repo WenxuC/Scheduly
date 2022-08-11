@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from .models import Task
 from .serializer import TaskSerializer
 
+
 # Create your views here.
 @api_view(['GET'])
 def home(request):
@@ -27,6 +28,7 @@ def updateTask(request, pk):
     task = Task.objects.get(id=pk)
     # take the new data and save it into the old
     serializer = TaskSerializer(instance=task, data=data)
+
     if serializer.is_valid():
         serializer.save()
 
@@ -41,4 +43,6 @@ def deleteTask(request, pk):
 @api_view(['POST'])
 def addTask(request):
     data = request.data
-    task = Task.objects.create(body=data['description'])
+    task = Task.objects.create(title=data['title'], description=data['description'])
+    serializer = TaskSerializer(task, many=False)
+    return Response(serializer.data)
