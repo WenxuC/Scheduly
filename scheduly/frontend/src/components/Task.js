@@ -8,20 +8,22 @@ const Task = ({ match, history }) => {
 	}, [taskId]);
 
 	let getTask = async () => {
+		if (taskId === 'new') return;
+
 		let response = await fetch(`/api/tasks/${taskId}`);
 		let data = await response.json();
 		setTask(data);
 	};
 
 	let updateTask = async () => {
-		fetch(`/api/tasks/${taskId}/update`, {
+		fetch(`/api/tasks/${taskId}/update/`, {
 			method: 'PUT',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(task),
 		});
 	};
 	let deleteTask = async () => {
-		fetch(`/api/tasks/${taskId}/`, {
+		fetch(`/api/tasks/${taskId}/delete/`, {
 			method: 'DELETE',
 			headers: {
 				'Content-Type': 'application/json',
@@ -30,7 +32,7 @@ const Task = ({ match, history }) => {
 		history.push('/');
 	};
 	let addTask = async () => {
-		fetch(`/api/tasks/`, {
+		fetch(`/api/tasks/new/`, {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(task),
@@ -38,25 +40,43 @@ const Task = ({ match, history }) => {
 	};
 
 	let handleSubmit = () => {
-		updateTask();
+		if (taskId === 'new') {
+			addTask();
+		} else {
+			updateTask();
+		}
 		history.push('/');
 	};
 
-	let handleChange = value => {
+	let handleTaskChange = value => {
 		setTask(task => ({ ...task, description: value }));
+	};
+	let handleTitleChange = value => {
+		setTask(task => ({ ...task, title: value }));
 	};
 
 	return (
 		<div>
+			<div>Title</div>
 			<textarea
 				onChange={e => {
-					handleChange(e.target.value);
+					handleTitleChange(e.target.value);
+				}}
+				value={task?.title}
+			></textarea>
+			<div>Description</div>
+			<textarea
+				onChange={e => {
+					handleTaskChange(e.target.value);
 				}}
 				value={task?.description}
 			></textarea>
 			<div>
 				{taskId !== 'new' ? (
-					<button onClick={deleteTask}>Delete</button>
+					<div>
+						<button onClick={handleSubmit}>Done</button>
+						<button onClick={deleteTask}>Delete</button>
+					</div>
 				) : (
 					<button onClick={handleSubmit}>Done</button>
 				)}
