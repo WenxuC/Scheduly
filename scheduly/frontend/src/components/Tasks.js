@@ -17,7 +17,7 @@ const Tasks = () => {
 		<div>
 			<div>
 				{tasks.map((task, index) => (
-					<Todo key={index} task={task} />
+					<Todo key={index} task={task}/>
 				))}
 			</div>
 			<AddTask />
