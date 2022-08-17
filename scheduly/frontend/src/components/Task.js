@@ -55,8 +55,27 @@ const Task = ({ match, history }) => {
 		setTask(task => ({ ...task, title: value }));
 	};
 
+	let start_time = new Date().toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+	let end_time, start_date, end_date
+	if (task !== null){
+		let date = new Date(task.start_time)
+		start_time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+		start_date = date.getMonth() + '/' + date.getDate()+ '/' + date.getFullYear()
+		if (task.end_time !== null){
+			date = new Date(task.end_time)
+			end_time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+			end_date = date.getMonth() + '/' + date.getDate()+ '/' + date.getFullYear()
+		}else{
+			date = new Date(task.start_time)
+			end_time = date.setHours(date.getHours() + 1)
+			end_time = date.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })
+			end_date = date.getMonth() + '/' + date.getDate()+ '/' + date.getFullYear()
+		}
+	}
 	return (
 		<div>
+			<div>Start: {start_date} - {start_time}</div>
+			<div>End: {end_date} - {end_time}</div>
 			<div>Title</div>
 			<textarea
 				onChange={e => {
@@ -74,11 +93,29 @@ const Task = ({ match, history }) => {
 			<div>
 				{taskId !== 'new' ? (
 					<div>
+						<form>
+							<input type="checkbox" id="daily" name='daily' value="Daily"></input>
+							<label htmlFor="daily">Daily</label>
+							<input type="checkbox" id="weekly" name='weekly' value="Weekly"></input>
+							<label htmlFor="weekly">Weekly</label>
+							<input type="checkbox" id="monthly" name='monthly' value="Monthly"></input>
+							<label htmlFor="monthly">Monthly</label>
+						</form>
 						<button onClick={handleSubmit}>Done</button>
 						<button onClick={deleteTask}>Delete</button>
 					</div>
 				) : (
-					<button onClick={handleSubmit}>Done</button>
+					<div>
+						<form>
+								<input type="checkbox" id="daily" name='daily' value="Daily"></input>
+								<label htmlFor="daily">Daily</label>
+								<input type="checkbox" id="weekly" name='weekly' value="Weekly"></input>
+								<label htmlFor="weekly">Weekly</label>
+								<input type="checkbox" id="monthly" name='monthly' value="Monthly"></input>
+								<label htmlFor="monthly">Monthly</label>
+						</form>
+						<button onClick={handleSubmit}>Done</button>
+					</div>
 				)}
 			</div>
 		</div>
