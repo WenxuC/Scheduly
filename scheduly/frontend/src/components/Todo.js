@@ -1,12 +1,16 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const Todo = ({ task }) => {
 
+const Todo = ({ task }) => {
+	let date = new Date(task.start_time)
+	let date_format = date.getMonth() + '/' + date.getDate()+ '/' + date.getFullYear()
 	return (
 		<Link to={`/tasks/${task.id}`}>
-			<div className='notes-list-item'>
-				<p>{task.start_time} -- {task.title}</p>
+			<div className='task-list-item'>
+				<p>
+					{date_format} -- {task.title}
+				</p>
 			</div>
 		</Link>
 	);
